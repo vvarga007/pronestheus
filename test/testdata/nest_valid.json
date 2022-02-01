@@ -38,7 +38,8 @@
           "temperatureScale": "CELSIUS"
         },
         "sdm.devices.traits.ThermostatTemperatureSetpoint": {
-          "heatCelsius": 19.17838
+          "heatCelsius": 19.17838,
+          "coolCelsius": 26.84454
         },
         "sdm.devices.traits.Temperature": {
           "ambientTemperatureCelsius": 20.23999

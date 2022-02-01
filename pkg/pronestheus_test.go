@@ -31,10 +31,12 @@ func TestAllMetrics(t *testing.T) {
 
 	assert.Equal(t, w.Code, http.StatusOK)
 	assert.Contains(t, w.Body.String(), "nest_up 1")
-	assert.Contains(t, w.Body.String(), `nest_setpoint_temperature_celsius{id="enterprises/PROJECT_ID/devices/DEVICE_ID",label="Custom-Name"} 19.17838`)
+	assert.Contains(t, w.Body.String(), `nest_heat_setpoint_temperature_celsius{id="enterprises/PROJECT_ID/devices/DEVICE_ID",label="Custom-Name"} 19.17838`)
+	assert.Contains(t, w.Body.String(), `nest_cool_setpoint_temperature_celsius{id="enterprises/PROJECT_ID/devices/DEVICE_ID",label="Custom-Name"} 26.84454`)
 	assert.Contains(t, w.Body.String(), `nest_ambient_temperature_celsius{id="enterprises/PROJECT_ID/devices/DEVICE_ID",label="Custom-Name"} 20.23999`)
 	assert.Contains(t, w.Body.String(), `nest_humidity_percent{id="enterprises/PROJECT_ID/devices/DEVICE_ID",label="Custom-Name"} 57`)
 	assert.Contains(t, w.Body.String(), `nest_heating{id="enterprises/PROJECT_ID/devices/DEVICE_ID",label="Custom-Name"} 0`)
+	assert.Contains(t, w.Body.String(), `nest_cooling{id="enterprises/PROJECT_ID/devices/DEVICE_ID",label="Custom-Name"} 0`)
 	assert.Contains(t, w.Body.String(), "nest_weather_up 1")
 	assert.Contains(t, w.Body.String(), "nest_weather_temperature_celsius 20.26")
 	assert.Contains(t, w.Body.String(), "nest_weather_humidity_percent 88")

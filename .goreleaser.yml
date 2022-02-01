@@ -14,19 +14,14 @@ builds:
     goos:
       - linux
       - darwin
-      - windows
 
 archives:
   - id: archive
     replacements:
       darwin: macOS
       linux: linux
-      windows: windows
       386: i386
       amd64: x86_64
-    format_overrides:
-      - goos: windows
-        format: zip
     # Don't include any additional files into the archives (such as README, CHANGELOG etc). 
     files:
       - none* 
@@ -39,23 +34,21 @@ changelog:
 
 release:
   github:
-    owner: grdl
+    owner: vvarga007
     name: pronestheus
 
 dockers:
   - dockerfile: Dockerfile
     goos: linux
     goarch: amd64
-    binaries:
-      - pronestheus
     image_templates:
-      - "grdl/pronestheus:{{ .Tag }}"
-      - "grdl/pronestheus:latest"
+      - "vavhab/pronestheus:{{ .Tag }}"
+      - "vavhab/pronestheus:latest"
 
 nfpms:
   - license: MIT
-    maintainer: grdl
-    homepage: https://github.com/grdl/pronestheus
+    maintainer: vvarga007
+    homepage: https://github.com/vvarga007/pronestheus
     bindir: /usr/local/bin
     description: Prometheus exporter for the Nest Learning Thermostat
     formats:

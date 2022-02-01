@@ -1,7 +1,9 @@
 # ProNestheus
 
-![build](https://github.com/grdl/pronestheus/workflows/build/badge.svg)
-[![Go Report Card](https://goreportcard.com/badge/github.com/grdl/pronestheus)](https://goreportcard.com/report/github.com/grdl/pronestheus)
+![build](https://github.com/vvarga007/pronestheus/workflows/build/badge.svg)
+[![Go Report Card](https://goreportcard.com/badge/github.com/vvarga007/pronestheus)](https://goreportcard.com/report/github.com/vvarga007/pronestheus)
+
+Forked project form https://github.com/grdl/pronestheus
 
 A Prometheus exporter for the [Nest Learning Thermostat](https://nest.com/). Exposes metrics about your thermostats and the weather in your current location.
 
@@ -13,12 +15,12 @@ Works with the new [Google Smart Device Management API](https://developers.googl
 
 ### Binary download
 
-Grab the Linux, macOS or Windows executable from the [latest release](https://github.com/grdl/pronestheus/releases/latest).
+Grab the Linux, macOS or Windows executable from the [latest release](https://github.com/vvarga007/pronestheus/releases/latest).
 
 ### Docker image
 
 ```
-docker run -p 9777:9777 -e "PRONESTHEUS_NEST_TOKEN=xxx" grdl/pronestheus
+docker run -p 9777:9777 -e "PRONESTHEUS_NEST_TOKEN=xxx" vavhab/pronestheus
 ```
 
 ### Helm chart
@@ -88,28 +90,40 @@ OpenWeatherMap API key is required to call the weather API. [Look here](https://
 ```
 # HELP nest_ambient_temperature_celsius Inside temperature.
 # TYPE nest_ambient_temperature_celsius gauge
-nest_ambient_temperature_celsius{id="abcd1234",label="Living-Room"} 23.5
+nest_ambient_temperature_celsius{id="enterprises/not-a-valid-id-aaj232sxs-ce34ad-33-sd",label="Downstairs"} 23.579987
+nest_ambient_temperature_celsius{id="enterprises/not-a-valid-id-bgj232scs-ce345d-36-sd",label="Upstairs"} 23.589996
+# HELP nest_cool_setpoint_temperature_celsius Cool setpoint temperature.
+# TYPE nest_cool_setpoint_temperature_celsius gauge
+nest_cool_setpoint_temperature_celsius{id="enterprises/not-a-valid-id-aaj232sxs-ce34ad-33-sd",label="Downstairs"} 0
+nest_cool_setpoint_temperature_celsius{id="enterprises/not-a-valid-id-bgj232scs-ce345d-36-sd",label="Upstairs"} 0
+# HELP nest_cooling Is thermostat cooling.
+# TYPE nest_cooling gauge
+nest_cooling{id="enterprises/not-a-valid-id-aaj232sxs-ce34ad-33-sd",label="Downstairs"} 0
+nest_cooling{id="enterprises/not-a-valid-id-bgj232scs-ce345d-36-sd",label="Upstairs"} 0
+# HELP nest_heat_setpoint_temperature_celsius Heat setpoint temperature.
+# TYPE nest_heat_setpoint_temperature_celsius gauge
+nest_heat_setpoint_temperature_celsius{id="enterprises/not-a-valid-id-aaj232sxs-ce34ad-33-sd",label="Downstairs"} 22.058258
+nest_heat_setpoint_temperature_celsius{id="enterprises/not-a-valid-id-bgj232scs-ce345d-36-sd",label="Upstairs"} 23.744415
 # HELP nest_heating Is thermostat heating.
 # TYPE nest_heating gauge
-nest_heating{id="abcd1234",label="Living-Room"} 0
+nest_heating{id="enterprises/not-a-valid-id-aaj232sxs-ce34ad-33-sd",label="Downstairs"} 0
+nest_heating{id="enterprises/not-a-valid-id-bgj232scs-ce345d-36-sd",label="Upstairs"} 0
 # HELP nest_humidity_percent Inside humidity.
 # TYPE nest_humidity_percent gauge
-nest_humidity_percent{id="abcd1234",label="Living-Room"} 55
-# HELP nest_setpoint_temperature_celsius Setpoint temperature.
-# TYPE nest_setpoint_temperature_celsius gauge
-nest_setpoint_temperature_celsius{id="abcd1234",label="Living-Room"} 18
+nest_humidity_percent{id="enterprises/not-a-valid-id-aaj232sxs-ce34ad-33-sd",label="Downstairs"} 34
+nest_humidity_percent{id="enterprises/not-a-valid-id-bgj232scs-ce345d-36-sd",label="Upstairs"} 28
 # HELP nest_up Was talking to Nest API successful.
 # TYPE nest_up gauge
 nest_up 1
 # HELP nest_weather_humidity_percent Outside humidity.
 # TYPE nest_weather_humidity_percent gauge
-nest_weather_humidity_percent 82
+nest_weather_humidity_percent 59
 # HELP nest_weather_pressure_hectopascal Outside pressure.
 # TYPE nest_weather_pressure_hectopascal gauge
-nest_weather_pressure_hectopascal 1016
+nest_weather_pressure_hectopascal 1027
 # HELP nest_weather_temperature_celsius Outside temperature.
 # TYPE nest_weather_temperature_celsius gauge
-nest_weather_temperature_celsius 17.57
+nest_weather_temperature_celsius 8.11
 # HELP nest_weather_up Was talking to OpenWeatherMap API successful.
 # TYPE nest_weather_up gauge
 nest_weather_up 1

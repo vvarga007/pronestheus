@@ -30,12 +30,13 @@ var (
 
 // Thermostat stores thermostat data received from Nest API.
 type Thermostat struct {
-	ID           string
-	Label        string
-	AmbientTemp  float64
-	SetpointTemp float64
-	Humidity     float64
-	Status       string
+	ID               string
+	Label            string
+	AmbientTemp      float64
+	HeatSetpointTemp float64
+	CoolSetpointTemp float64
+	Humidity         float64
+	Status           string
 }
 
 // Config provides the configuration necessary to create the Collector.
@@ -60,11 +61,13 @@ type Collector struct {
 
 // Metrics contains the metrics collected by the Collector.
 type Metrics struct {
-	up           *prometheus.Desc
-	ambientTemp  *prometheus.Desc
-	setpointTemp *prometheus.Desc
-	humidity     *prometheus.Desc
-	heating      *prometheus.Desc
+	up               *prometheus.Desc
+	ambientTemp      *prometheus.Desc
+	heatsetpointTemp *prometheus.Desc
+	coolsetpointTemp *prometheus.Desc
+	humidity         *prometheus.Desc
+	heating          *prometheus.Desc
+	cooling          *prometheus.Desc
 }
 
 // New creates a Collector using the given Config.
@@ -105,11 +108,13 @@ func New(cfg Config) (*Collector, error) {
 func buildMetrics() *Metrics {
 	var nestLabels = []string{"id", "label"}
 	return &Metrics{
-		up:           prometheus.NewDesc(strings.Join([]string{"nest", "up"}, "_"), "Was talking to Nest API successful.", nil, nil),
-		ambientTemp:  prometheus.NewDesc(strings.Join([]string{"nest", "ambient", "temperature", "celsius"}, "_"), "Inside temperature.", nestLabels, nil),
-		setpointTemp: prometheus.NewDesc(strings.Join([]string{"nest", "setpoint", "temperature", "celsius"}, "_"), "Setpoint temperature.", nestLabels, nil),
-		humidity:     prometheus.NewDesc(strings.Join([]string{"nest", "humidity", "percent"}, "_"), "Inside humidity.", nestLabels, nil),
-		heating:      prometheus.NewDesc(strings.Join([]string{"nest", "heating"}, "_"), "Is thermostat heating.", nestLabels, nil),
+		up:               prometheus.NewDesc(strings.Join([]string{"nest", "up"}, "_"), "Was talking to Nest API successful.", nil, nil),
+		ambientTemp:      prometheus.NewDesc(strings.Join([]string{"nest", "ambient", "temperature", "celsius"}, "_"), "Inside temperature.", nestLabels, nil),
+		heatsetpointTemp: prometheus.NewDesc(strings.Join([]string{"nest", "heat", "setpoint", "temperature", "celsius"}, "_"), "Heat setpoint temperature.", nestLabels, nil),
+		coolsetpointTemp: prometheus.NewDesc(strings.Join([]string{"nest", "cool", "setpoint", "temperature", "celsius"}, "_"), "Cool setpoint temperature.", nestLabels, nil),
+		humidity:         prometheus.NewDesc(strings.Join([]string{"nest", "humidity", "percent"}, "_"), "Inside humidity.", nestLabels, nil),
+		heating:          prometheus.NewDesc(strings.Join([]string{"nest", "heating"}, "_"), "Is thermostat heating.", nestLabels, nil),
+		cooling:          prometheus.NewDesc(strings.Join([]string{"nest", "cooling"}, "_"), "Is thermostat cooling.", nestLabels, nil),
 	}
 }
 
@@ -117,9 +122,11 @@ func buildMetrics() *Metrics {
 func (c *Collector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.metrics.up
 	ch <- c.metrics.ambientTemp
-	ch <- c.metrics.setpointTemp
+	ch <- c.metrics.heatsetpointTemp
+	ch <- c.metrics.coolsetpointTemp
 	ch <- c.metrics.humidity
 	ch <- c.metrics.heating
+	ch <- c.metrics.cooling
 }
 
 // Collect implements the prometheus.Collector interface.
@@ -139,9 +146,11 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 		labels := []string{therm.ID, strings.Replace(therm.Label, " ", "-", -1)}
 
 		ch <- prometheus.MustNewConstMetric(c.metrics.ambientTemp, prometheus.GaugeValue, therm.AmbientTemp, labels...)
-		ch <- prometheus.MustNewConstMetric(c.metrics.setpointTemp, prometheus.GaugeValue, therm.SetpointTemp, labels...)
+		ch <- prometheus.MustNewConstMetric(c.metrics.heatsetpointTemp, prometheus.GaugeValue, therm.HeatSetpointTemp, labels...)
+		ch <- prometheus.MustNewConstMetric(c.metrics.coolsetpointTemp, prometheus.GaugeValue, therm.CoolSetpointTemp, labels...)
 		ch <- prometheus.MustNewConstMetric(c.metrics.humidity, prometheus.GaugeValue, therm.Humidity, labels...)
 		ch <- prometheus.MustNewConstMetric(c.metrics.heating, prometheus.GaugeValue, b2f(therm.Status == "HEATING"), labels...)
+		ch <- prometheus.MustNewConstMetric(c.metrics.cooling, prometheus.GaugeValue, b2f(therm.Status == "COOLING"), labels...)
 	}
 }
 
@@ -170,12 +179,13 @@ func (c *Collector) getNestReadings() (thermostats []*Thermostat, err error) {
 		}
 
 		thermostat := Thermostat{
-			ID:           device.Get("name").String(),
-			Label:        device.Get("traits.sdm\\.devices\\.traits\\.Info.customName").String(),
-			AmbientTemp:  device.Get("traits.sdm\\.devices\\.traits\\.Temperature.ambientTemperatureCelsius").Float(),
-			SetpointTemp: device.Get("traits.sdm\\.devices\\.traits\\.ThermostatTemperatureSetpoint.heatCelsius").Float(),
-			Humidity:     device.Get("traits.sdm\\.devices\\.traits\\.Humidity.ambientHumidityPercent").Float(),
-			Status:       device.Get("traits.sdm\\.devices\\.traits\\.ThermostatHvac.status").String(),
+			ID:               device.Get("name").String(),
+			Label:            device.Get("traits.sdm\\.devices\\.traits\\.Info.customName").String(),
+			AmbientTemp:      device.Get("traits.sdm\\.devices\\.traits\\.Temperature.ambientTemperatureCelsius").Float(),
+			HeatSetpointTemp: device.Get("traits.sdm\\.devices\\.traits\\.ThermostatTemperatureSetpoint.heatCelsius").Float(),
+			CoolSetpointTemp: device.Get("traits.sdm\\.devices\\.traits\\.ThermostatTemperatureSetpoint.coolCelsius").Float(),
+			Humidity:         device.Get("traits.sdm\\.devices\\.traits\\.Humidity.ambientHumidityPercent").Float(),
+			Status:           device.Get("traits.sdm\\.devices\\.traits\\.ThermostatHvac.status").String(),
 		}
 
 		thermostats = append(thermostats, &thermostat)
