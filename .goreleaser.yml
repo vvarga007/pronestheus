@@ -42,8 +42,8 @@ dockers:
     goos: linux
     goarch: amd64
     image_templates:
-      - "grdl/pronestheus:{{ .Tag }}"
-      - "grdl/pronestheus:latest"
+      - "vavhab/pronestheus:{{ .Tag }}"
+      - "vavhab/pronestheus:latest"
 
 nfpms:
   - license: MIT

@@ -1,7 +1,9 @@
 # ProNestheus
 
-![build](https://github.com/grdl/pronestheus/workflows/build/badge.svg)
-[![Go Report Card](https://goreportcard.com/badge/github.com/grdl/pronestheus)](https://goreportcard.com/report/github.com/grdl/pronestheus)
+![build](https://github.com/vvarga007/pronestheus/workflows/build/badge.svg)
+[![Go Report Card](https://goreportcard.com/badge/github.com/vvarga007/pronestheus)](https://goreportcard.com/report/github.com/vvarga007/pronestheus)
+
+Forked project form https://github.com/grdl/pronestheus
 
 A Prometheus exporter for the [Nest Learning Thermostat](https://nest.com/). Exposes metrics about your thermostats and the weather in your current location.
 
@@ -13,12 +15,12 @@ Works with the new [Google Smart Device Management API](https://developers.googl
 
 ### Binary download
 
-Grab the Linux, macOS or Windows executable from the [latest release](https://github.com/grdl/pronestheus/releases/latest).
+Grab the Linux, macOS or Windows executable from the [latest release](https://github.com/vvarga007/pronestheus/releases/latest).
 
 ### Docker image
 
 ```
-docker run -p 9777:9777 -e "PRONESTHEUS_NEST_TOKEN=xxx" grdl/pronestheus
+docker run -p 9777:9777 -e "PRONESTHEUS_NEST_TOKEN=xxx" vavhab/pronestheus
 ```
 
 ### Helm chart
